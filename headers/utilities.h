@@ -1,0 +1,1 @@
+char* str_formatter(const char* type, ...);
