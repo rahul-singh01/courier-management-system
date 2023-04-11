@@ -1,7 +1,9 @@
 try catch in c,
 mysql_fetch_row return what and it's limitations,
-learn headers again...
-and fix it at sql.c
+learn headers again,
+and fix it at sql.c,
+
+understand Variadic function at depth,
 
 
 prob{ local var can't be return, may because that is not a ponter}

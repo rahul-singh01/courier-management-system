@@ -58,7 +58,7 @@ int main()
             };
             Args args = {
                 1,
-                100,
+                10,
                 0,
                 "Pending",
                 "Hello World",

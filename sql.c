@@ -37,10 +37,14 @@ MYSQL* connect1(MYSQL *conn, Auth auth) { /*
     return conn;
 };
 
-void if_not() {
+void run(Auth auth, Args args, void (*func)(MYSQL*, Args)) { // void (*func)(Args) is a defination of a function pointer, it'll point to a function which takes Args as argument and returns void
+    MYSQL* conn;
+    conn = connect1(conn, auth); // new database connected conn
 
+    (*func)(conn, args);
+
+    mysql_close(conn); // close connection
 };
-
 void run_query(MYSQL* conn, const char* query) {
     // to run the query
     if (mysql_query(conn, query)) {
@@ -48,7 +52,11 @@ void run_query(MYSQL* conn, const char* query) {
     };
 };
 
-MYSQL* fetch(MYSQL* conn, const char* query, int len) {
+void if_not() {
+
+};
+
+void fetch(MYSQL* conn, const char* query, int len) {
     MYSQL_RES* res;
     MYSQL_ROW row;
  
@@ -69,76 +77,23 @@ MYSQL* fetch(MYSQL* conn, const char* query, int len) {
     mysql_free_result(res);
 };
 
-void _add_courier(int from_person, int to_person, int status, char* detail_status, char* content, int company) {
+void _add_courier(MYSQL* conn, Args args) {
     char* stat[3] = {"Pending", "In Transit", "Delivered"};
     
-    char* _query_s = "INSERT INTO courier (from_person, to_person, status, detail_status, content, company) VALUES (";
+    char* _query_s = "INSERT INTO couriers (from_person, to_person, status, detail_status, content, company) VALUES (";
     char* _query_e = ");";
     
-    char* query = str_formatter("ssdddssds", _query_s, " ", from_person, to_person, status, stat[status], content, company, _query_e);
+    char* query = sql_str_formatter("ssddsssds", " ,", _query_s, args.from_person, args.to_person, stat[args.status], args.detail_status, args.content, args.company, _query_e);
+    // char* query = str_formatter("ssddsssds", _query_s, " ,", args.from_person, args.to_person, stat[args.status], args.detail_status, args.content, args.company, _query_e);
 
     printf("%s", query);
-    // printf("%lu", sizeof(content)); content is a pointer...
+    
+    run_query(conn, query);
 };
-MYSQL* add_courier(Auth auth, Args args) {
+
+void add_courier(Auth auth, Args args) {
     // default parameters are not supported(can be implemented with the help of variadic functions, func(int count, ...))
 
-
-    MYSQL* conn;
-    conn = connect1(conn, auth); // new database connected conn
-
-    _add_courier(args.from_person, args.to_person, args.status, args.detail_status, args.content, args.company);
-
-    mysql_close(conn); // close connection
-
+    run(auth, args, _add_courier);
 };
 
-// void run(int (*func)(), arg) {
-//     MYSQL* conn;
-//     conn = connect1(conn, auth); // new database connected conn
-
-//     (*func)(arg);
-
-//     mysql_close(conn); // close connection
-// };
-
-// int main() {
-//     // MYSQL* conn; // pointer to MYSQL object because mysql_real_connect() takes a pointer as a argument definded in mysql.h
-
-//     // definig Auth type here throws error: "error: unknown type name ‘Auth’", Why???
-//     // typedef struct {
-//     //     char* server;
-//     //     char* user;
-//     //     char* password;
-//     //     char* database;
-//     // } Auth;
-
-//     Auth auth = {
-//         "localhost",
-//         "kay",
-//         "kush.mysql",
-//         "test"
-//     };
- 
-//     // conn = connect1(conn, auth); // new database connected conn
- 
-//     // What is I fire two mysql query without returing the updated conn pointer???
-//     /* send SQL query */
-//     // char* query1 = "SELECT * FROM test";
-//     // char* query2 = "SELECT * FROM user";
- 
-//     // fetch(conn, query1, 10); // conn is updated
-//     // fetch(conn, query2, 10); // conn is updated
-    
-//     Args args = {
-//         1,
-//         100,
-//         0,
-//         "Pending",
-//         "Hello World",
-//         1
-//     };
-//     add_courier(auth, args);
- 
-//     // mysql_close(conn); // close connection
-// }
