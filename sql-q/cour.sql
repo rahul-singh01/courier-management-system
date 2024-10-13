@@ -16,8 +16,8 @@ CREATE TABLE couriers (
     company int unsigned NOT NULL,
 
     FOREIGN KEY (company) REFERENCES companies(sn),
-    FOREIGN KEY (from_person) REFERENCES user(sn),
-    FOREIGN KEY (to_person) REFERENCES user(sn),
+    FOREIGN KEY (from_person) REFERENCES users(sn),
+    FOREIGN KEY (to_person) REFERENCES users(sn),
 
     PRIMARY KEY (sn)
     -- INDEX (sn)

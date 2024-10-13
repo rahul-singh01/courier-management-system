@@ -5,5 +5,19 @@ and fix it at sql.c,
 
 understand Variadic function at depth,
 
+how id add courier working bcz args def is changed (forget it maybe no other member have same name that's why)
+
+understand hash.c at depth
 
 prob{ local var can't be return, may because that is not a ponter}
+
+
+----------------------------------------------
+
+
+What to Do?
+
+1. Login Functionality.
+2. Inside Login Functionality.
+3. Proper Manner of The App. In short Loop.
+4. Track the order.
